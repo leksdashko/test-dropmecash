@@ -1,0 +1,24 @@
+/* for block with only email */
+.wpcf7-form.sent .wpcf7-response-output,
+ .wpcf7 form.invalid .wpcf7-response-output{
+    margin-top: 45px;
+    padding: 11px;
+    display: block;
+    text-align: center;
+    max-width: 340px;
+    font-size: 12px;
+}
+ .wpcf7-not-valid-tip{
+     margin-top: 7px;
+     text-align: center;
+     margin-bottom: 10px;
+     font-size: 12px;
+     width: 320px;
+ }
+
+
+:focus-visible{
+    outline: 0 !important;
+}
+
+ 

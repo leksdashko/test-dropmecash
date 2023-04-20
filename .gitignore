@@ -1,0 +1,15 @@
+# Ignore everything
+/*
+
+# But not these files...
+!/themes
+/themes/twenty*
+
+!wp-rocket-config
+
+!.gitignore
+!README.md
+
+.DS_Store
+
+#!.github
