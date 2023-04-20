@@ -586,16 +586,16 @@ add_filter('pre_get_posts','SearchFilter');
                         </div>
                     </div>
                     <div class="tab_content tg-container">
-                        <?php foreach ($ids as $tags_id): $t++; ?>
+                        <?php foreach ($ids as $tags_id): $t++; 
+													$args = array(
+														'posts_per_page' => 100,
+														'post_type'      => "post",
+														'tag_id'      => $tags_id,
+													);
+													$query = new WP_Query( $args );
+												?>
 												<article class="tab-contents tg-container <?= $t == 1 ? 'active':''?>" data-tab-id="tab<?= $t; ?>">
-                        <?
-                            $args = array(
-                                'posts_per_page' => 100,
-                                'post_type'      => "post",
-                                'tag_id'      => $tags_id,
-                            );
-                            $query = new WP_Query( $args );
-                            ?>
+                        
                         </article>
                         <?php endforeach; ?>
                     </div>
@@ -731,24 +731,18 @@ add_filter('pre_get_posts','SearchFilter');
                     </h2>
                     <div class="faq_accordions">
                         <div class="first_faq_column">
-                        <?php
-                            foreach ($values as $value){
-                                $j++;
-                                if ($j % 2 != 0){
-                                $idac =  uniqid();
-                                ?>
-                                <div class="status wp-block-pb-accordion-item c-accordion__item js-accordion-item" data-initially-open="<?php if ($j==1){?>true<?}?>" data-auto-close="true"   data-scroll="false" data-scroll-offset="0">
-                                    <div id="at-<?php echo $idac; ?>" class="status-title c-accordion__title js-accordion-controller" role="button" tabindex="0" aria-controls="<?php echo $idac; ?>" aria-expanded="false">
-                                        <h5 class="km-title"><?php echo $value["item_title"]; ?></h5>
+                        <?php foreach ($values as $value): $j++;
+                                if ($j % 2 != 0): $idac =  uniqid(); ?>
+                                <div class="status wp-block-pb-accordion-item c-accordion__item js-accordion-item" data-initially-open="<?= $j==1 ? 'true':''?>" data-auto-close="true"   data-scroll="false" data-scroll-offset="0">
+                                    <div id="at-<?= $idac; ?>" class="status-title c-accordion__title js-accordion-controller" role="button" tabindex="0" aria-controls="<?= $idac; ?>" aria-expanded="false">
+                                        <h5 class="km-title"><?= $value["item_title"]; ?></h5>
                                     </div>
-                                    <div id="ac-<?php echo $idac; ?>" class="c-accordion__content" style="<?php if ($j==1){?>display: block;<?} else {?> display: none; <?php } ?>" hidden="hidden">
-                                        <?php echo $value["item_text"]; ?>
+                                    <div id="ac-<?= $idac; ?>" class="c-accordion__content" style="<?= $j==1 ? 'display: block' : 'display: none'?>" hidden="hidden">
+                                        <?= $value["item_text"]; ?>
                                     </div>
                                 </div>
-                                <?php
-                                }
-                            }
-                        ?>
+                                <?php endif; ?>
+														<?php endforeach; ?>
                         </div>
                         <div class="second_faq_column">
                             <?php
