@@ -13,7 +13,7 @@ jobs:
       with:
       # Deploy vars 
         WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }} 
-        WPE_ENV: DEV_ENV
+        WPE_ENV: dropmecash
         # Deploy Options
         REMOTE_PATH: "wp-content/"
         PHP_LINT: TRUE
