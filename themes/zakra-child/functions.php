@@ -1111,7 +1111,7 @@ function zakra_header_main_site_branding_zw() {
     <div class="site-branding">
         <?php
         // Check for meta logo.
-        $meta_logo_id = ! is_home() ? intval( get_post_meta( zakra_get_post_id(), 'zakra_logo', true ) ) : '';
+        $meta_logo_id = !is_home() ? intval(get_post_meta( zakra_get_post_id(), 'zakra_logo', true )) : '';
 
         if ( $meta_logo_id ) {
             $meta_logo_attr = array(
@@ -1133,30 +1133,21 @@ function zakra_header_main_site_branding_zw() {
         }
         ?>
         <div class="site-info-wrap">
-            <?php
-            if ( is_front_page() && is_home() ) :
-                ?>
-                <h1 class="site-title">
-                    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
-            <?php
-            else :
-                ?>
-                <p class="site-title">
-                    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
-                </p>
-            <?php
-            endif;
+            <?php if ( is_front_page() && is_home() ) : ?>
+              <h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
+            <?php else: ?>
+            <p class="site-title">
+              <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
+            </p>
+            <?php endif; ?>
 
-            $zakra_description = get_bloginfo( 'description', 'display' );
+            <?php $zakra_description = get_bloginfo( 'description', 'display' );
 
-            if ( $zakra_description || is_customize_preview() ) :
-                ?>
-                <p class="site-description"> <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php echo $zakra_description; /* WPCS: xss ok. */ ?></a></p>
+            if ( $zakra_description || is_customize_preview() ) : ?>
+            <p class="site-description"> <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php echo $zakra_description; /* WPCS: xss ok. */ ?></a></p>
             <?php endif; ?>
         </div>
 
     </div><!-- .site-branding -->
     <?php
-}
-
-
+} ?>
