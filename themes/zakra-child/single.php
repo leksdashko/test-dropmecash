@@ -10,7 +10,7 @@
 get_header();
 ?>
 
-    <div id="primary" class="content-area tg-container">
+    <div id="primary" class="content-area tg-container test-git">
         <?php echo apply_filters( 'zakra_after_primary_start_filter', false ); // WPCS: XSS OK. ?>
 
         <?php
