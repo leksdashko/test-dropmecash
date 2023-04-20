@@ -1,4 +1,4 @@
-name: Deploy to development
+name: Deploy to main
 on:
   push:
     branches:
@@ -13,7 +13,7 @@ jobs:
       with:
       # Deploy vars 
         WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }} 
-        WPE_ENV: dropmecash
+        WPE_ENV: DEV_ENV
         # Deploy Options
         REMOTE_PATH: "wp-content/"
         PHP_LINT: TRUE
