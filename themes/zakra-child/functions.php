@@ -595,14 +595,11 @@ add_filter('pre_get_posts','SearchFilter');
                                 'tag_id'      => $tags_id,
                             );
                             $query = new WP_Query( $args );
-                            if ( $query->have_posts() ) {
-                                while ( $query->have_posts() ) {
-                                    $query->the_post();
-									
-                                    ?>
-                                        <a href="<?php echo get_permalink(); ?>" class="item_in_tab">
+                            if($query->have_posts()):
+                                while($query->have_posts()): $query->the_post(); ?>
+                                        <a href="<?= get_permalink(); ?>" class="item_in_tab">
                                             <div class="item_image">
-                                                <?php echo get_the_post_thumbnail(); ?>
+                                                <?= get_the_post_thumbnail(); ?>
                                             </div>
                                             <div class="item_title for_tel">
                                                 <?php the_title() ?>
@@ -612,39 +609,35 @@ add_filter('pre_get_posts','SearchFilter');
                                                     <?php
                                                         $postID = get_the_ID();
                                                         $terms = get_the_terms($postID, 'reward');
+																												$termID = null;
                                                         foreach ($terms as $term) {
                                                             $termID = $term->term_id;
                                                         }
-                                                        if (function_exists('z_taxonomy_image_url')) {?>
-                                                            <img height="38px" src="<?php echo z_taxonomy_image_url($termID); ?>" alt="Provider <?php echo get_term( $termID )->name; ?>">
-                                                        <?php } ?>
-                                                        <?php echo get_term( $termID )->name; ?>
+																										?>
+
+																										<?php if (function_exists('z_taxonomy_image_url')): ?>
+                                                    <img height="38px" src="<?= z_taxonomy_image_url($termID); ?>" alt="Provider <?= get_term( $termID )->name; ?>">
+                                                    <?php endif; ?>
+
+                                                    <?= get_term($termID)->name; ?>
                                                 </div>
                                             </div>
                                             <div class="item_category for_tel">
-                                                <?php
-                                                    $category = get_the_category();
-                                                    foreach ($category as $catitem) {?>
-                                                            <span class="cat_item">
-                                                            <?php
-                                                        echo $catitem->cat_name;
-                                                        ?>
-                                                            </span>
-                                                            <?php
-                                                    }
-                                                ?>
+                                                <?php $category = get_the_category();
+																								foreach ($category as $catitem): ?>
+																								<span class="cat_item">
+																								<?= $catitem->cat_name; ?>
+																								</span>
+																								<?php endforeach; ?>
                                             </div>
                                             <div class="item_link">
-                                                <span><?php echo get_theme_mod('section_id_ins'); ?></span>
+                                                <span><?= get_theme_mod('section_id_ins'); ?></span>
                                                 <svg width="18" height="30" viewBox="0 0 18 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M0 3.18L11.703 15L0 26.82L3.14851 30L18 15L3.14851 0L0 3.18Z" fill="#101011"/>
                                                 </svg>
                                             </div>
                                         </a>
-                                    <?php
-                                }
-                            }
-                            ?>
+                        	<?php endwhile; endif;?>
                         </article>
                         <?php endforeach; ?>
                     </div>
