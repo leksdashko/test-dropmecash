@@ -586,12 +586,8 @@ add_filter('pre_get_posts','SearchFilter');
                         </div>
                     </div>
                     <div class="tab_content tg-container">
-                        <?php foreach ($ids as $tags_id) {
-                            $t++;
-								
-                            ?>
-						
-                        <article class="tab-contents tg-container <?php if ($t == 1){?> active <?php } else {}?>" data-tab-id="tab<?php echo $t; ?>">
+                        <?php foreach ($ids as $tags_id): $t++; ?>
+												<article class="tab-contents tg-container <?= $t == 1 ? 'active':''?>" data-tab-id="tab<?= $t; ?>">
                         <?
                             $args = array(
                                 'posts_per_page' => 100,
@@ -650,7 +646,7 @@ add_filter('pre_get_posts','SearchFilter');
                             }
                             ?>
                         </article>
-                        <?php } ?>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>
