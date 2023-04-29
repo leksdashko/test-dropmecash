@@ -520,7 +520,7 @@ add_filter('pre_get_posts','SearchFilter');
         // Custom CSS class name.
         $class = 'acord ' . ( $attributes['className'] ?? '' );
         if ( ! empty( $attributes['align'] ) ) {
-            $class .= " align{$attributes['align']}";
+            $class .= " align" . $attributes['align'];
         }
         $tags_ids = mb_get_block_field( 'tags' );
         $i=0;
@@ -540,22 +540,17 @@ add_filter('pre_get_posts','SearchFilter');
 		foreach ($tags_ids as $value){
 			$ids[] = $value["choose_tag"];
 		}
-                                    $tags = get_terms( array( 'taxonomy' => 'post_tag', 'orderby' => 'include', 'include' => $ids  ) );
-                                    foreach( $tags as $tag ){
-                                        $i++;
-                                        ?>
-                                        <li class="swiper-slide tab-item <?php if ($i == 1){?> active <?php } else {}?>">
-                                            <button class="btn-tab" data-tab-target="tab<?php echo $i; ?>">
-                                                <?php
-                                                if (function_exists('z_taxonomy_image_url')) {?>
-                                                <img height="38px" src="<?php echo z_taxonomy_image_url($tag->term_taxonomy_id); ?> " alt="Provider <?php echo get_term( $tag->term_taxonomy_id )->name; ?>">
-                                                <?php } ?>
-                                                <?php echo $tag->name . ' '; ?>
-                                            </button>
-                                        </li>
-                                <?php
-                                    }
-                                ?>
+														$tags = get_terms( array( 'taxonomy' => 'post_tag', 'orderby' => 'include', 'include' => $ids  ) );
+														foreach( $tags as $tag ): $i++; ?>
+														<li class="swiper-slide tab-item <?= $i == 1 ? 'active' : '' ?>">
+															<button class="btn-tab" data-tab-target="tab<?= $i; ?>">
+																	<?php if (function_exists('z_taxonomy_image_url')): ?>
+																	<img height="38px" src="<?= z_taxonomy_image_url($tag->term_taxonomy_id); ?> " alt="Provider <?= get_term( $tag->term_taxonomy_id )->name; ?>">
+																	<?php endif; ?>
+																	<?= $tag->name . ' '; ?>
+															</button>
+														</li>
+														<?php endforeach ?>
                             </ul>
                             <div class="tab-prev">
                                 <svg width="18" height="30" viewBox="0 0 18 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -570,38 +565,80 @@ add_filter('pre_get_posts','SearchFilter');
                         </div>
                     </div>
                     <h2 class="mobile_title hide_desc">
-                        <?php echo mb_get_block_field( 'title_tabs' ); ?>
+                        <?= mb_get_block_field( 'title_tabs' ); ?>
                     </h2>
                     <div class="top_tab_panel_content tg-container">
                         <div class="first_column">
                         </div>
                         <div class="second_column">
-                            <?php echo mb_get_block_field( 'title_name' ); ?>
+                            <?= mb_get_block_field( 'title_name' ); ?>
                         </div>
                         <div class="third_column">
-                            <?php echo mb_get_block_field( 'rewards' ); ?>
+                            <?= mb_get_block_field( 'rewards' ); ?>
                         </div>
                         <div class="fourth_column">
-                            <?php echo mb_get_block_field( 'category' ); ?>
+                            <?= mb_get_block_field( 'category' ); ?>
                         </div>
                     </div>
                     <div class="tab_content tg-container">
-                        <?php foreach ($ids as $tags_id): $t++; 
-													$args = array(
-														'posts_per_page' => 100,
-														'post_type'      => "post",
-														'tag_id'      => $tags_id,
-													);
-													$query = new WP_Query( $args );
-												?>
-												<article class="tab-contents tg-container <?= $t == 1 ? 'active':''?>" data-tab-id="tab<?= $t; ?>">
-                        
+                    <?php foreach ($ids as $tags_id):
+											$t++;
+											$args = array(
+												'posts_per_page' => 100,
+												'post_type'      => "post",
+												'tag_id'      => $tags_id,
+											);
+											$query = new WP_Query($args);
+										?>
+											<article class="tab-contents tg-container <?= $t == 1 ? 'active' : '' ?>" data-tab-id="tab<?= $t; ?>">
+                        <?php if ($query->have_posts()): while($query->have_posts()): $query->the_post(); ?>
+												<a href="<?= get_permalink(); ?>" class="item_in_tab">
+														<div class="item_image">
+																<?= get_the_post_thumbnail(); ?>
+														</div>
+														<div class="item_title for_tel">
+																<?php the_title() ?>
+														</div>
+														<div class="item_tag for_tel">
+																<div class="item_tag_image">
+																<?php
+																		$postID = get_the_ID();
+																		$terms = get_the_terms($postID, 'reward');
+																		$termID = null;
+																		foreach ($terms as $term) {
+																				$termID = $term->term_id;
+																		} 
+																	?>
+																	<?php if (function_exists('z_taxonomy_image_url')): ?>
+																			<img height="38px" src="<?= z_taxonomy_image_url($termID); ?>" alt="Provider <?= get_term( $termID )->name; ?>">
+																	<?php endif; ?>
+																	<?= get_term( $termID )->name; ?>
+																</div>
+														</div>
+														<div class="item_category for_tel">
+																<?php 
+																$category = get_the_category();
+																foreach ($category as $catitem): ?>
+																<span class="cat_item">
+																<?= $catitem->cat_name; ?>
+																</span>
+																<?php endforeach; ?>
+														</div>
+														<div class="item_link">
+																<span><?= get_theme_mod('section_id_ins'); ?></span>
+																<svg width="18" height="30" viewBox="0 0 18 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+																		<path d="M0 3.18L11.703 15L0 26.82L3.14851 30L18 15L3.14851 0L0 3.18Z" fill="#101011"/>
+																</svg>
+														</div>
+												</a>
+												<?php endwhile; ?>
+											<?php endif; ?>
                         </article>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
+										<?php endforeach; ?>
+								</div>
+						</div>
+				</div>
+		</div>
         <script>
             'use strict';
 
@@ -703,6 +740,127 @@ add_filter('pre_get_posts','SearchFilter');
 
         return $meta_boxes;
     }
+
+    function my_faq( $attributes, $is_preview = false, $post_id = null ) {
+        // Fields data.
+        if ( empty( $attributes['data'] ) ) {
+            return;
+        }
+        // Unique HTML ID if available.
+        $id = 'id' . ( $attributes['id'] ?? '' );
+        if ( ! empty( $attributes['anchor'] ) ) {
+            $id = $attributes['anchor'];
+        }
+        // Custom CSS class name.
+        $class = 'acord ' . ( $attributes['className'] ?? '' );
+        if ( ! empty( $attributes['align'] ) ) {
+            $class .= " align{$attributes['align']}";
+        }
+        $values = mb_get_block_field( 'lines' );
+        $j = 0;
+        $i = 0;
+        ?>
+        <div class="faq_cover">
+            <div class="faq_block tg-container">
+                <div class="faq_content">
+                    <h2 class="faq_title">
+                        <?php echo mb_get_block_field( 'title' ); ?>
+                    </h2>
+                    <div class="faq_accordions">
+                        <div class="first_faq_column">
+                        <?php foreach ($values as $value):  $j++; ?>
+                        	<?php if ($j % 2 != 0): $idac =  uniqid(); ?>
+														<div class="status wp-block-pb-accordion-item c-accordion__item js-accordion-item" data-initially-open="<?= $j==1 ? 'true' : '' ?>" data-auto-close="true"   data-scroll="false" data-scroll-offset="0">
+																<div id="at-<?= $idac; ?>" class="status-title c-accordion__title js-accordion-controller" role="button" tabindex="0" aria-controls="<?= $idac; ?>" aria-expanded="false">
+																		<h5 class="km-title"><?= $value["item_title"]; ?></h5>
+																</div>
+																<div id="ac-<?= $idac; ?>" class="c-accordion__content" style="<?= $j==1 ? 'display: block' : 'display: none;'?>" hidden="hidden">
+																		<?= $value["item_text"]; ?>
+																</div>
+														</div>
+														<?php endif;?>
+													<?php endforeach;?>
+                        </div>
+                        <div class="second_faq_column">
+                            <?php foreach ($values as $value): $i++; ?>
+                            <?php if ($i % 2 == 0): $idac =  uniqid(); ?>
+															<div class="status wp-block-pb-accordion-item c-accordion__item js-accordion-item" data-initially-open="<?= $j==1 ? 'true' : '' ?>" data-auto-close="true"   data-scroll="false" data-scroll-offset="0">
+																	<div id="at-<?php echo $idac; ?>" class="status-title c-accordion__title js-accordion-controller" role="button" tabindex="0" aria-controls="<?php echo $idac; ?>" aria-expanded="false">
+																			<h5 class="km-title"><?php echo $value["item_title"]; ?></h5>
+																	</div>
+																	<div id="ac-<?php echo $idac; ?>" class="c-accordion__content" style="<? $j==1 ? 'display: block;' : 'display: none;'?>" hidden="hidden">
+																			<?php echo $value["item_text"]; ?>
+																	</div>
+															</div>
+															<?php endif; ?>
+														<?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <style>
+            @media screen and (max-width: 768px){
+                body .faq_accordions{
+                    flex-direction: column;
+                    gap: 10px;
+                }
+                body div .c-accordion__title:after{
+                    width: 10px;
+                    background: url("/wp-content/uploads/2023/01/mobile_arrow.svg");
+                    right: 25px;
+                }
+                body .status-title{
+                    padding-left: 16px;
+                    padding-right: 50px;
+                }
+                body .c-accordion__content{
+                    padding: 16px;
+                    padding-top: 0;
+                }
+            }
+            .faq_accordions{
+                display: flex;
+                gap: 20px;
+            }
+            .faq_accordions> div{
+                flex-basis: 50%;
+            }
+            .status-title{
+                padding: 12px 25px;
+                padding-right: 60px;
+            }
+            .wp-block-pb-accordion-item{
+                background: #FFFFFF;
+                box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+                border-radius: 7px;
+            }
+            body .is-open>.c-accordion__title:after{
+                content: '';
+                transform: rotate(180deg);
+                top: calc(50% - 3px);
+            }
+            body .c-accordion__title:after{
+                right: 35px;
+                content: '';
+                background: url("/wp-content/uploads/2023/01/close_accordion.svg");
+                width: 17px;
+                height: 6px;
+            }
+            .c-accordion__content{
+                font-weight: 400;
+                padding: 25px;
+                padding-top: 0;
+                padding-bottom: 20px;
+            }
+            .km-title{
+                margin-bottom: 0;
+            }
+            .faq_accordions div .wp-block-pb-accordion-item:not(:last-child){
+                margin-bottom: 10px;
+            }
+        </style>
+    <?php }
 
     add_filter('rwmb_meta_boxes', 'your_prefix_register_banner');
 
@@ -978,3 +1136,58 @@ function remove_this_head_brand()
 {
     remove_action('zakra_header_block_one', 'zakra_header_main_site_branding', 10);
 }
+add_action( 'zakra_header_block_one', 'zakra_header_main_site_branding_zw', 10 );
+function zakra_header_main_site_branding_zw() {
+    ?>
+    <div class="site-branding">
+        <?php
+        // Check for meta logo.
+        $meta_logo_id = ! is_home() ? intval( get_post_meta( zakra_get_post_id(), 'zakra_logo', true ) ) : '';
+
+        if ( $meta_logo_id ) {
+            $meta_logo_attr = array(
+                'class'    => 'tg-logo',
+                'itemprop' => 'logo',
+            );
+
+            // @codingStandardsIgnoreStart
+            $meta_logo = apply_filters( 'zakra_meta_logo', zakra_get_image_by_id( $meta_logo_id, $meta_logo_attr, get_bloginfo( 'name', 'display' ) ) ); // WPCS: CSRF ok.
+            // @codingStandardsIgnoreEnd
+
+            echo sprintf(
+                '<a href="%1$s" class="tg-logo-link" rel="home" itemprop="url">%2$s</a>',
+                esc_url( home_url( '/' ) ),
+                $meta_logo
+            );
+        } else {
+            the_custom_logo();
+        }
+        ?>
+        <div class="site-info-wrap">
+            <?php
+            if ( is_front_page() && is_home() ) :
+                ?>
+                <h1 class="site-title">
+                    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
+            <?php
+            else :
+                ?>
+                <p class="site-title">
+                    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
+                </p>
+            <?php
+            endif;
+
+            $zakra_description = get_bloginfo( 'description', 'display' );
+
+            if ( $zakra_description || is_customize_preview() ) :
+                ?>
+                <p class="site-description"> <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php echo $zakra_description; /* WPCS: xss ok. */ ?></a></p>
+            <?php endif; ?>
+        </div>
+
+    </div><!-- .site-branding -->
+    <?php
+}
+
+
